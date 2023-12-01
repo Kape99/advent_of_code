@@ -4,8 +4,39 @@ use std::fs::read_to_string;
 fn main() {
     let lines = read_lines("src/input.txt");
 
-    println!("The final calibration value is: {}",compute_calibrations(lines));
+    let test = "xjvbkbtdqhgvsseven719fiveseven";
 
+    
+    println!("The final calibration value is: {}", compute_calibrations_correct(lines));
+    println!("{}", test.replace("seven", "7"));
+
+}
+
+fn compute_calibrations_correct(lines: Vec<String>) -> u32{
+    let conversion_values = [
+        ("one","1"),
+        ("two","2"),
+        ("three","3"),
+        ("four","4"),
+        ("five","5"),
+        ("six","6"),
+        ("seven","7"),
+        ("eight","8"),
+        ("nine","9"),
+        ];
+
+    // nice aproach but "zoneight234" ==> "z1ight234" the eight cannot be completed....
+    let mut new_lines: Vec<String> = vec![];
+    for line in &lines{
+        let mut new_line: String = line.to_string();
+        for conv in &conversion_values{
+            new_line = new_line.replace(&conv.0, &conv.1);
+        }
+        new_lines.push(new_line);
+        // println!("{} : {}", line, new_lines.last().unwrap());
+    }
+
+    return compute_calibrations(new_lines);
 }
 
 fn compute_calibrations(lines: Vec<String>) -> u32{
@@ -27,6 +58,9 @@ fn compute_calibrations(lines: Vec<String>) -> u32{
                 None=>{}
             }
         }
+
+        // println!( "{} {}{}",line, first_digit.unwrap(),last_digit.unwrap());
+
         match first_digit{
             Some(num) => calibration_sum += num,
             None => panic!(),
