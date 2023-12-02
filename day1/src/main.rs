@@ -1,7 +1,7 @@
 use std::fs::read_to_string;
 
 fn main() {
-    let lines = read_lines("src/input.txt");
+    let lines = read_lines("input.txt");
 
     let mut calibration_count = 0;
 
