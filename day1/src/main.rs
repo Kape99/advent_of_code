@@ -5,7 +5,7 @@ fn main() {
 
     let mut calibration_count = 0;
 
-    for line in &lines{
+    for line in &lines {
         let new_line = extract_first_and_last(line);
 
         let new_line_converted = convert_to_digit(new_line);
@@ -16,7 +16,7 @@ fn main() {
     println!("{calibration_count}");
 }
 
-fn extract_first_and_last(line: &String) -> String {
+fn extract_first_and_last(line: &str) -> String {
     let values: [&str; 18] = [
         "one", "1", "two", "2", "three", "3", "four", "4", "five", "5", "six", "6", "seven", "7",
         "eight", "8", "nine", "9",
@@ -26,30 +26,24 @@ fn extract_first_and_last(line: &String) -> String {
     let mut last: (&str, Option<usize>) = ("", None);
 
     for value in values {
-        match line.find(value) {
-            Some(index) => {
-                if first.1.is_none() || index <= first.1.unwrap() {
-                    first.0 = value;
-                    first.1 = Some(index);
-                }
+        if let Some(index) = line.find(value) {
+            if first.1.is_none() || index <= first.1.unwrap() {
+                first.0 = value;
+                first.1 = Some(index);
             }
-            None => {}
         }
-        match line.rfind(value) {
-            Some(index) => {
-                if last.1.is_none() || index >= last.1.unwrap() {
-                    last.0 = value;
-                    last.1 = Some(index);
-                }
+        if let Some(index) = line.rfind(value) {
+            if last.1.is_none() || index >= last.1.unwrap() {
+                last.0 = value;
+                last.1 = Some(index);
             }
-            None => {}
         }
     }
 
     let mut new_line = first.0.to_owned();
     new_line.push_str(last.0);
 
-    return new_line;
+    new_line
 }
 
 fn convert_to_digit(line: String) -> String {
@@ -67,10 +61,10 @@ fn convert_to_digit(line: String) -> String {
 
     let mut new_line: String = line;
     for conv in &conversion_values {
-        new_line = new_line.replace(&conv.0, &conv.1);
+        new_line = new_line.replace(conv.0, conv.1);
     }
 
-    return new_line;
+    new_line
 }
 
 fn compute_calibrations(line: String) -> u32 {
@@ -80,15 +74,12 @@ fn compute_calibrations(line: String) -> u32 {
 
     for ch in line.chars() {
         // is a digit in base 10
-        match ch.to_digit(10) {
-            Some(num) => {
-                match first_digit {
-                    None => first_digit = Some(num * 10),
-                    Some(_) => {}
-                }
-                last_digit = Some(num);
+        if let Some(num) = ch.to_digit(10) {
+            match first_digit {
+                None => first_digit = Some(num * 10),
+                Some(_) => {}
             }
-            None => {}
+            last_digit = Some(num);
         }
     }
 
@@ -103,7 +94,7 @@ fn compute_calibrations(line: String) -> u32 {
         None => panic!(),
     }
 
-    return calibration;
+    calibration
 }
 
 fn read_lines(filename: &str) -> Vec<String> {
