@@ -5,9 +5,9 @@ fn main() {
 
     let mut count = 0;
     for game in &games {
-        let (game_id, round_str) = get_id_and_rounds(game);
+        let (_game_id, round_str) = get_id_and_rounds(game);
 
-        let round_list_str: Vec<_> = round_str[1..].split(";").collect();
+        let round_list_str: Vec<_> = round_str[1..].split(';').collect();
 
         let mut bag = HashMap::from([(" red", 0), (" green", 0), (" blue", 0)]);
 
@@ -15,7 +15,7 @@ fn main() {
             let cubes_str: Vec<_> = round[1..].split(", ").collect();
 
             for cube_str in cubes_str {
-                let (color, number) = match cube_str.find(" ") {
+                let (color, number) = match cube_str.find(' ') {
                     Some(split_index) => {
                         let (n, c) = cube_str.split_at(split_index);
                         let num = match n.parse::<i32>() {
@@ -51,16 +51,15 @@ fn compute_valid_games(games: Vec<String>) -> u32 {
 
         let is_valid = is_valid_game(&round_str);
 
-        match is_valid {
-            true => game_sum += game_id,
-            _ => {}
+        if is_valid {
+            game_sum += game_id
         }
     }
     game_sum
 }
 
 fn is_valid_game(round_str: &str) -> bool {
-    let round_list_str: Vec<_> = round_str[1..].split(";").collect();
+    let round_list_str: Vec<_> = round_str[1..].split(';').collect();
 
     for round in round_list_str {
         if !is_valid_round(round) {
@@ -77,7 +76,7 @@ fn is_valid_round(round: &str) -> bool {
     let cubes_str: Vec<_> = round[1..].split(", ").collect();
 
     for cube_str in cubes_str {
-        let (color, number) = match cube_str.find(" ") {
+        let (color, number) = match cube_str.find(' ') {
             Some(split_index) => {
                 let (n, c) = cube_str.split_at(split_index);
                 let num = match n.parse::<i32>() {
@@ -90,20 +89,17 @@ fn is_valid_round(round: &str) -> bool {
             None => panic!("the cube divisor was not found"),
         };
 
-        match bag.get(color) {
-            Some(pool) => {
-                if pool < &number {
-                    return false;
-                }
+        if let Some(pool) = bag.get(color) {
+            if pool < &number {
+                return false;
             }
-            _ => {}
         }
     }
     true
 }
 
 fn get_id_and_rounds(game: &str) -> (u32, String) {
-    let (game_id_str, rounds_str) = match game.find(":") {
+    let (game_id_str, rounds_str) = match game.find(':') {
         Some(split_index) => game.split_at(split_index),
         None => panic!("the game divisor was not found"),
     };
