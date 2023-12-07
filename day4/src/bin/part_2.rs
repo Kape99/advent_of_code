@@ -1,5 +1,4 @@
-use std::{fs::read_to_string, collections::hash_set};
-
+use std::fs::read_to_string;
 
 fn read_lines(filename: &str) -> Vec<String> {
     let mut result = Vec::new();
@@ -16,8 +15,5 @@ fn read_lines(filename: &str) -> Vec<String> {
 }
 
 fn main() {
-    let lines = read_lines("src/bin/input.txt");
-
+    let _lines = read_lines("src/bin/input.txt");
 }
-
-
