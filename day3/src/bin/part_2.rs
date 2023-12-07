@@ -1,11 +1,11 @@
-use std::{fs::read_to_string, collections::hash_set};
+use std::fs::read_to_string;
 
 fn main() {
     let lines = read_lines("src/bin/input.txt");
 
     let mut matrix: Vec<Vec<char>> = Vec::new();
 
-    let mut computed_result = 0;
+    let mut computed_result: u32 = 0;
 
     for line in lines {
         let line = &line;
@@ -16,14 +16,10 @@ fn main() {
         matrix.push(list)
     }
 
-
-
-
     for row in 0..matrix.len() {
         for col in 0..matrix[row].len() {
             if '*' == matrix[row][col] {
-                compute_mult(&matrix, row, col);
-
+                computed_result += compute_mult(&matrix, row, col);
             }
         }
     }
@@ -31,40 +27,44 @@ fn main() {
     println!("{computed_result}")
 }
 
-fn compute_mult( matrix: &Vec<Vec<char>>, row: usize, col: usize) -> i32 {
-    let start_r = if row == 0 { 0 } else { row - 1};
-    let end_r = if row == matrix.len() { matrix.len() } else { row + 1};
+fn compute_mult(matrix: &Vec<Vec<char>>, row: usize, col: usize) -> u32 {
+    let start_r = if row == 0 { 0 } else { row - 1 };
+    let end_r = if row == matrix.len() {
+        matrix.len()
+    } else {
+        row + 1
+    };
 
-    let start_c = if col == 0 { 0 } else { col - 1};
-    let end_c = if col == matrix[row].len() { matrix[row].len() } else { col + 1};
+    let start_c = if col == 0 { 0 } else { col - 1 };
+    let end_c = if col == matrix[row].len() {
+        matrix[row].len()
+    } else {
+        col + 1
+    };
 
     let mut numbers: Vec<u32> = Vec::new();
-    for n_row in start_r..end_r+1{
-        for n_col in start_c..end_c+1{
-            if 0 != get_number(matrix.clone(), (n_row, n_col)){
-                if n_col == start_c ||  0 == get_number(matrix.clone(), (n_row, n_col-1)){
-
-                
+    for n_row in start_r..end_r + 1 {
+        for n_col in start_c..end_c + 1 {
+            if  0 != get_number(matrix.clone(), (n_row, n_col)) &&
+                (n_col == start_c || 0 == get_number(matrix.clone(), (n_row, n_col - 1))) {
                     numbers.push(get_number(matrix.clone(), (n_row, n_col)));
-                }
-            
+                
             }
-        
         }
     }
     let mut mult = 0;
-    if numbers.len() == 2{
+    if numbers.len() == 2 {
         mult = 1;
-        for n in numbers{
+        for n in numbers {
             println!("{n}");
-            mult*= n;
+            mult *= n;
         }
     }
     return mult;
 }
 
 fn get_number(matrix: Vec<Vec<char>>, (row, col): (usize, usize)) -> u32 {
-    if !matrix[row][col].is_ascii_digit(){
+    if !matrix[row][col].is_ascii_digit() {
         return 0;
     }
 
@@ -76,12 +76,10 @@ fn get_number(matrix: Vec<Vec<char>>, (row, col): (usize, usize)) -> u32 {
                 break;
             }
             index -= 1;
- 
-        }else{
+        } else {
             index += 1;
             break;
         }
-        
     }
 
     loop {
@@ -92,7 +90,7 @@ fn get_number(matrix: Vec<Vec<char>>, (row, col): (usize, usize)) -> u32 {
                 break;
             }
             index += 1;
-            if index == matrix[row].len(){
+            if index == matrix[row].len() {
                 break;
             }
         } else {

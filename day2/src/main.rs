@@ -40,8 +40,10 @@ fn main() {
     }
 
     println!("{count}");
-    // let game_sum = compute_valid_games(games);
-    // println!("Game sum: {game_sum}");
+
+    
+    let game_sum = compute_valid_games(games);
+    println!("Game sum: {game_sum}");
 }
 
 fn compute_valid_games(games: Vec<String>) -> u32 {
